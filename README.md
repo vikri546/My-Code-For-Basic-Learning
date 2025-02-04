@@ -5,15 +5,15 @@ Hi! I'm a passionate programmer who loves creating innovative solutions and brin
 
 ![Preview](Thumbnail.jpg)
 
-## 🚀 Fitur Utama
-- 🔥 Responsif dan modern
-- 🎨 Desain menarik menggunakan CSS & Tailwind
-- ⚡ Interaksi dinamis dengan JavaScript
+## 🚀 Key Features
+- 🔥 Responsive and modern
+- 🎨 Attractive design using CSS & Tailwind
+- ⚡ Dynamic interaction with JavaScript
 
-## 🛠 Teknologi
-- **HTML5**: Struktur konten
-- **CSS3**: Styling & animasi
-- **JavaScript (ES6+)**: Interaksi dinamis
+## 🛠 Technology
+- HTML5: Content structure
+- CSS3: Styling & animation
+- JavaScript (ES6+): Dynamic interactions
 
 ## All The Link I Have
 https://linktr.ee/vikri_ardiansyah
