@@ -15,5 +15,5 @@ Hi! I'm a passionate programmer who loves creating innovative solutions and brin
 - **CSS3**: Styling & animasi
 - **JavaScript (ES6+)**: Interaksi dinamis
 
-## 📜 Lisensi
-[MIT License](LICENSE)
+## All The Link I Have
+https://linktr.ee/vikri_ardiansyah
