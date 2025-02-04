@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalkulator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .calculator {
+            background-color: #333;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            width: 300px;
+        }
+
+        .display {
+            background-color: #fff;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            text-align: right;
+            font-size: 24px;
+            min-height: 60px;
+            overflow: hidden;
+        }
+
+        .buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+
+        button {
+            padding: 15px;
+            font-size: 18px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background-color: #666;
+            color: white;
+            transition: background-color 0.2s;
+        }
+
+        button:hover {
+            background-color: #777;
+        }
+
+        .operator {
+            background-color: #ff9500;
+        }
+
+        .operator:hover {
+            background-color: #ffaa33;
+        }
+
+        .equals {
+            background-color: #2196F3;
+        }
+
+        .equals:hover {
+            background-color: #42a5f5;
+        }
+
+        .clear {
+            background-color: #f44336;
+        }
+
+        .clear:hover {
+            background-color: #ef5350;
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator">
+        <div class="display" id="display">0</div>
+        <div class="buttons">
+            <button class="clear" onclick="clearDisplay()">C</button>
+            <button onclick="appendOperator('/')">/</button>
+            <button onclick="appendOperator('*')">×</button>
+            <button onclick="deleteLastChar()">⌫</button>
+            
+            <button onclick="appendNumber('7')">7</button>
+            <button onclick="appendNumber('8')">8</button>
+            <button onclick="appendNumber('9')">9</button>
+            <button class="operator" onclick="appendOperator('-')">-</button>
+            
+            <button onclick="appendNumber('4')">4</button>
+            <button onclick="appendNumber('5')">5</button>
+            <button onclick="appendNumber('6')">6</button>
+            <button class="operator" onclick="appendOperator('+')">+</button>
+            
+            <button onclick="appendNumber('1')">1</button>
+            <button onclick="appendNumber('2')">2</button>
+            <button onclick="appendNumber('3')">3</button>
+            <button class="equals" onclick="calculate()">=</button>
+            
+            <button onclick="appendNumber('0')">0</button>
+            <button onclick="appendNumber('00')">00</button>
+            <button onclick="appendDecimal()">.</button>
+            <button onclick="calculatePercentage()">%</button>
+        </div>
+    </div>
+
+    <script>
+        let displayValue = '0';
+        let lastOperator = '';
+        const display = document.getElementById('display');
+
+        function updateDisplay() {
+            display.textContent = displayValue;
+        }
+
+        function appendNumber(num) {
+            if (displayValue === '0') {
+                displayValue = num;
+            } else {
+                displayValue += num;
+            }
+            updateDisplay();
+        }
+
+        function appendOperator(operator) {
+            const lastChar = displayValue.slice(-1);
+            if ('+-*/'.includes(lastChar)) {
+                displayValue = displayValue.slice(0, -1) + operator;
+            } else {
+                displayValue += operator;
+            }
+            updateDisplay();
+        }
+
+        function appendDecimal() {
+            const parts = displayValue.split(/[\+\-\*\/]/);
+            const lastPart = parts[parts.length - 1];
+            if (!lastPart.includes('.')) {
+                displayValue += '.';
+                updateDisplay();
+            }
+        }
+
+        function clearDisplay() {
+            displayValue = '0';
+            updateDisplay();
+        }
+
+        function deleteLastChar() {
+            displayValue = displayValue.slice(0, -1) || '0';
+            updateDisplay();
+        }
+
+        function calculatePercentage() {
+            try {
+                displayValue = (eval(displayValue) / 100).toString();
+                updateDisplay();
+            } catch (error) {
+                displayValue = 'Error';
+                updateDisplay();
+                setTimeout(clearDisplay, 1000);
+            }
+        }
+
+        function calculate() {
+            try {
+                displayValue = eval(displayValue).toString();
+                updateDisplay();
+            } catch (error) {
+                displayValue = 'Error';
+                updateDisplay();
+                setTimeout(clearDisplay, 1000);
+            }
+        }
+    </script>
+</body>
+</html>
