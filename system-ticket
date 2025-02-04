@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistem Pemesanan Tiket</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f2f5;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        h1, h2 {
+            color: #333;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .booking-form {
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        .ticket-types {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .ticket-card {
+            border: 1px solid #ddd;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .ticket-card.selected {
+            border-color: #4CAF50;
+            background-color: #e8f5e9;
+        }
+
+        .price {
+            font-size: 24px;
+            color: #2196F3;
+            margin: 10px 0;
+        }
+
+        .summary {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .total {
+            font-size: 20px;
+            font-weight: bold;
+            border-top: 2px solid #ddd;
+            padding-top: 10px;
+            margin-top: 10px;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 16px;
+            margin-top: 20px;
+            transition: background-color 0.2s;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .error {
+            color: #f44336;
+            font-size: 14px;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .success-message {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+            text-align: center;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Pemesanan Tiket</h1>
+        
+        <form id="bookingForm" class="booking-form">
+            <div class="form-group">
+                <label for="name">Nama Lengkap</label>
+                <input type="text" id="name" required>
+                <div class="error" id="nameError">Nama harus diisi</div>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" required>
+                <div class="error" id="emailError">Email tidak valid</div>
+            </div>
+
+            <div class="form-group">
+                <label for="date">Tanggal Kunjungan</label>
+                <input type="date" id="date" required>
+                <div class="error" id="dateError">Tanggal harus diisi</div>
+            </div>
+
+            <div class="form-group">
+                <label>Jenis Tiket</label>
+                <div class="ticket-types">
+                    <div class="ticket-card" onclick="selectTicket('regular')">
+                        <h3>Regular</h3>
+                        <div class="price">Rp 50.000</div>
+                        <p>Tiket masuk standar</p>
+                    </div>
+                    <div class="ticket-card" onclick="selectTicket('vip')">
+                        <h3>VIP</h3>
+                        <div class="price">Rp 100.000</div>
+                        <p>Akses ke area VIP</p>
+                    </div>
+                </div>
+                <div class="error" id="ticketError">Pilih jenis tiket</div>
+            </div>
+
+            <div class="form-group">
+                <label for="quantity">Jumlah Tiket</label>
+                <input type="number" id="quantity" min="1" value="1" required onchange="updateSummary()">
+                <div class="error" id="quantityError">Minimal pembelian 1 tiket</div>
+            </div>
+
+            <div class="summary">
+                <h2>Ringkasan Pesanan</h2>
+                <div class="summary-item">
+                    <span>Jenis Tiket:</span>
+                    <span id="selectedTicketType">-</span>
+                </div>
+                <div class="summary-item">
+                    <span>Harga per Tiket:</span>
+                    <span id="ticketPrice">Rp 0</span>
+                </div>
+                <div class="summary-item">
+                    <span>Jumlah Tiket:</span>
+                    <span id="ticketQuantity">0</span>
+                </div>
+                <div class="summary-item total">
+                    <span>Total:</span>
+                    <span id="totalPrice">Rp 0</span>
+                </div>
+            </div>
+
+            <button type="submit">Pesan Tiket</button>
+        </form>
+
+        <div class="success-message" id="successMessage">
+            Pemesanan tiket berhasil! Silakan cek email Anda untuk konfirmasi.
+        </div>
+    </div>
+
+    <script>
+        let selectedTicket = null;
+        const prices = {
+            regular: 50000,
+            vip: 100000
+        };
+
+        function selectTicket(type) {
+            selectedTicket = type;
+            
+            // Update UI
+            document.querySelectorAll('.ticket-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            event.target.closest('.ticket-card').classList.add('selected');
+            
+            // Update summary
+            updateSummary();
+        }
+
+        function updateSummary() {
+            if (!selectedTicket) return;
+
+            const quantity = parseInt(document.getElementById('quantity').value) || 0;
+            const price = prices[selectedTicket];
+            const total = price * quantity;
+
+            document.getElementById('selectedTicketType').textContent = 
+                selectedTicket.charAt(0).toUpperCase() + selectedTicket.slice(1);
+            document.getElementById('ticketPrice').textContent = formatPrice(price);
+            document.getElementById('ticketQuantity').textContent = quantity;
+            document.getElementById('totalPrice').textContent = formatPrice(total);
+        }
+
+        function formatPrice(price) {
+            return 'Rp ' + price.toLocaleString('id-ID');
+        }
+
+        function validateForm() {
+            let isValid = true;
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const date = document.getElementById('date').value;
+            const quantity = document.getElementById('quantity').value;
+
+            // Reset errors
+            document.querySelectorAll('.error').forEach(error => {
+                error.style.display = 'none';
+            });
+
+            // Validate name
+            if (!name) {
+                document.getElementById('nameError').style.display = 'block';
+                isValid = false;
+            }
+
+            // Validate email
+            if (!email || !email.includes('@')) {
+                document.getElementById('emailError').style.display = 'block';
+                isValid = false;
+            }
+
+            // Validate date
+            if (!date) {
+                document.getElementById('dateError').style.display = 'block';
+                isValid = false;
+            }
+
+            // Validate ticket selection
+            if (!selectedTicket) {
+                document.getElementById('ticketError').style.display = 'block';
+                isValid = false;
+            }
+
+            // Validate quantity
+            if (!quantity || quantity < 1) {
+                document.getElementById('quantityError').style.display = 'block';
+                isValid = false;
+            }
+
+            return isValid;
+        }
+
+        document.getElementById('bookingForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            if (validateForm()) {
+                // Here you would typically send the data to a server
+                document.getElementById('successMessage').style.display = 'block';
+                this.reset();
+                selectedTicket = null;
+                document.querySelectorAll('.ticket-card').forEach(card => {
+                    card.classList.remove('selected');
+                });
+                updateSummary();
+                
+                // Hide success message after 5 seconds
+                setTimeout(() => {
+                    document.getElementById('successMessage').style.display = 'none';
+                }, 5000);
+            }
+        });
+    </script>
+</body>
+</html>
