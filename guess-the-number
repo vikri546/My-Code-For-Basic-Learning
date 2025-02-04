@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Tebak Angka</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f2f5;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .game-container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .game-info {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .score {
+            display: flex;
+            justify-content: space-around;
+            margin: 15px 0;
+        }
+
+        .score-item {
+            text-align: center;
+        }
+
+        .score-label {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .score-value {
+            font-size: 24px;
+            color: #2196F3;
+            font-weight: bold;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 18px;
+            text-align: center;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #2196F3;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            width: 100%;
+            margin: 5px 0;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        button.reset {
+            background-color: #f44336;
+        }
+
+        button.reset:hover {
+            background-color: #e53935;
+        }
+
+        .message {
+            margin: 20px 0;
+            padding: 15px;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+
+        .correct {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .wrong {
+            background-color: #ffebee;
+            color: #c62828;
+        }
+
+        .hint {
+            font-style: italic;
+            color: #666;
+            margin-top: 10px;
+        }
+
+        .history {
+            margin-top: 20px;
+            text-align: left;
+        }
+
+        .history h3 {
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .guess-list {
+            list-style: none;
+            max-height: 150px;
+            overflow-y: auto;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .guess-item {
+            padding: 8px;
+            border-bottom: 1px solid #ddd;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .guess-item:last-child {
+            border-bottom: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <h1>Game Tebak Angka</h1>
+        
+        <div class="game-info">
+            <p>Tebak angka antara 1-100!</p>
+            <div class="score">
+                <div class="score-item">
+                    <div class="score-label">Percobaan</div>
+                    <div class="score-value" id="attempts">0</div>
+                </div>
+                <div class="score-item">
+                    <div class="score-label">Skor Terbaik</div>
+                    <div class="score-value" id="bestScore">-</div>
+                </div>
+            </div>
+        </div>
+
+        <input type="number" id="guessInput" placeholder="Masukkan angka..." min="1" max="100">
+        <button onclick="checkGuess()">Tebak!</button>
+        <button class="reset" onclick="resetGame()">Main Lagi</button>
+
+        <div class="message" id="message"></div>
+        
+        <div class="history">
+            <h3>Riwayat Tebakan:</h3>
+            <ul class="guess-list" id="guessList"></ul>
+        </div>
+    </div>
+
+    <script>
+        let targetNumber;
+        let attempts;
+        let gameOver;
+        let guessHistory;
+        let bestScore = localStorage.getItem('bestScore') || '-';
+
+        // Initialize game
+        function initGame() {
+            targetNumber = Math.floor(Math.random() * 100) + 1;
+            attempts = 0;
+            gameOver = false;
+            guessHistory = [];
+            
+            // Update UI
+            document.getElementById('attempts').textContent = attempts;
+            document.getElementById('bestScore').textContent = bestScore;
+            document.getElementById('message').textContent = '';
+            document.getElementById('message').className = 'message';
+            document.getElementById('guessList').innerHTML = '';
+            document.getElementById('guessInput').value = '';
+            document.getElementById('guessInput').focus();
+        }
+
+        function checkGuess() {
+            if (gameOver) return;
+
+            const guessInput = document.getElementById('guessInput');
+            const guess = parseInt(guessInput.value);
+            const messageElement = document.getElementById('message');
+
+            // Validate input
+            if (isNaN(guess) || guess < 1 || guess > 100) {
+                messageElement.textContent = 'Masukkan angka antara 1-100!';
+                messageElement.className = 'message wrong';
+                return;
+            }
+
+            attempts++;
+            document.getElementById('attempts').textContent = attempts;
+
+            // Add to history
+            addToHistory(guess);
+
+            if (guess === targetNumber) {
+                messageElement.textContent = `Selamat! Kamu berhasil menebak angka ${targetNumber} dalam ${attempts} percobaan!`;
+                messageElement.className = 'message correct';
+                gameOver = true;
+                updateBestScore();
+            } else {
+                const hint = guess < targetNumber ? 'Terlalu rendah!' : 'Terlalu tinggi!';
+                messageElement.textContent = hint;
+                messageElement.className = 'message wrong';
+            }
+
+            guessInput.value = '';
+            guessInput.focus();
+        }
+
+        function addToHistory(guess) {
+            guessHistory.unshift(guess);
+            
+            const guessList = document.getElementById('guessList');
+            const listItem = document.createElement('li');
+            listItem.className = 'guess-item';
+            
+            const hintText = guess < targetNumber ? '↑ Terlalu rendah' : 
+                           guess > targetNumber ? '↓ Terlalu tinggi' : 
+                           '✓ Tepat!';
+            
+            listItem.innerHTML = `
+                <span>Tebakan #${attempts}: ${guess}</span>
+                <span>${hintText}</span>
+            `;
+            
+            guessList.insertBefore(listItem, guessList.firstChild);
+        }
+
+        function updateBestScore() {
+            if (bestScore === '-' || attempts < bestScore) {
+                bestScore = attempts;
+                localStorage.setItem('bestScore', bestScore);
+                document.getElementById('bestScore').textContent = bestScore;
+            }
+        }
+
+        function resetGame() {
+            initGame();
+        }
+
+        // Add event listener for Enter key
+        document.getElementById('guessInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                checkGuess();
+            }
+        });
+
+        // Initialize game on load
+        initGame();
+    </script>
+</body>
+</html>
