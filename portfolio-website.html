@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio Saya</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }
+
+        /* Header Styles */
+        header {
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('/api/placeholder/1200/600');
+            background-size: cover;
+            background-position: center;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 2rem;
+            color: white;
+        }
+
+        .profile-img {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            margin-bottom: 2rem;
+            border: 3px solid white;
+            object-fit: cover;
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .tagline {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        /* Navigation */
+        nav {
+            background-color: white;
+            padding: 1rem;
+            position: sticky;
+            top: 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            z-index: 100;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: #2196F3;
+        }
+
+        /* Section Styles */
+        section {
+            padding: 5rem 2rem;
+        }
+
+        section h2 {
+            text-align: center;
+            margin-bottom: 3rem;
+            font-size: 2.5rem;
+        }
+
+        /* About Section */
+        .about {
+            background-color: #f8f9fa;
+        }
+
+        .about-content {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        /* Skills Section */
+        .skills {
+            background-color: white;
+        }
+
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .skill-card {
+            background-color: #f8f9fa;
+            padding: 2rem;
+            border-radius: 10px;
+            text-align: center;
+            transition: transform 0.3s;
+        }
+
+        .skill-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .skill-card i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: #2196F3;
+        }
+
+        /* Projects Section */
+        .projects {
+            background-color: #f8f9fa;
+        }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .project-card {
+            background-color: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .project-img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .project-info {
+            padding: 1.5rem;
+        }
+
+        .project-title {
+            font-size: 1.25rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Contact Section */
+        .contact {
+            background-color: white;
+        }
+
+        .contact-form {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        textarea {
+            height: 150px;
+            resize: vertical;
+        }
+
+        button {
+            background-color: #2196F3;
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #1976D2;
+        }
+
+        /* Footer */
+        footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .social-links {
+            margin-top: 1rem;
+        }
+
+        .social-links a {
+            color: white;
+            margin: 0 1rem;
+            font-size: 1.5rem;
+            text-decoration: none;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            .tagline {
+                font-size: 1.25rem;
+            }
+
+            nav ul {
+                flex-direction: column;
+                text-align: center;
+                gap: 1rem;
+            }
+
+            section {
+                padding: 3rem 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <img src="/api/placeholder/200/200" alt="Profile Picture" class="profile-img">
+        <h1>John Doe</h1>
+        <p class="tagline">Web Developer & Designer</p>
+    </header>
+
+    <nav>
+        <ul>
+            <li><a href="#about">Tentang</a></li>
+            <li><a href="#skills">Keahlian</a></li>
+            <li><a href="#projects">Proyek</a></li>
+            <li><a href="#contact">Kontak</a></li>
+        </ul>
+    </nav>
+
+    <section id="about" class="about">
+        <h2>Tentang Saya</h2>
+        <div class="about-content">
+            <p>Saya adalah seorang web developer dengan pengalaman 5 tahun dalam pembuatan website dan aplikasi web. Saya memiliki passion dalam membuat user interface yang menarik dan fungsional.</p>
+            <p>Dengan latar belakang di bidang desain dan programming, saya dapat menghadirkan solusi digital yang tidak hanya bagus secara visual tapi juga powerful secara teknis.</p>
+        </div>
+    </section>
+
+    <section id="skills" class="skills">
+        <h2>Keahlian</h2>
+        <div class="skills-grid">
+            <div class="skill-card">
+                <i>🌐</i>
+                <h3>Web Development</h3>
+                <p>HTML, CSS, JavaScript, React</p>
+            </div>
+            <div class="skill-card">
+                <i>🎨</i>
+                <h3>Web Design</h3>
+                <p>UI/UX, Figma, Adobe XD</p>
+            </div>
+            <div class="skill-card">
+                <i>📱</i>
+                <h3>Mobile Development</h3>
+                <p>React Native, Flutter</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="projects" class="projects">
+        <h2>Proyek</h2>
+        <div class="projects-grid">
+            <div class="project-card">
+                <img src="/api/placeholder/400/200" alt="Project 1" class="project-img">
+                <div class="project-info">
+                    <h3 class="project-title">E-Commerce Website</h3>
+                    <p>Website e-commerce dengan fitur lengkap menggunakan React dan Node.js</p>
+                </div>
+            </div>
+            <div class="project-card">
+                <img src="/api/placeholder/400/200" alt="Project 2" class="project-img">
+                <div class="project-info">
+                    <h3 class="project-title">Mobile App</h3>
+                    <p>Aplikasi mobile untuk tracking kesehatan menggunakan React Native</p>
+                </div>
+            </div>
+            <div class="project-card">
+                <img src="/api/placeholder/400/200" alt="Project 3" class="project-img">
+                <div class="project-info">
+                    <h3 class="project-title">Company Profile</h3>
+                    <p>Website company profile responsif dengan animasi modern</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="contact">
+        <h2>Kontak</h2>
+        <form class="contact-form">
+            <div class="form-group">
+                <label for="name">Nama</label>
+                <input type="text" id="name" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" required>
+            </div>
+            <div class="form-group">
+                <label for="message">Pesan</label>
+                <textarea id="message" required></textarea>
+            </div>
+            <button type="submit">Kirim Pesan</button>
+        </form>
+    </section>
+
+    <footer>
+        <p>&copy; 2024 John Doe. All rights reserved.</p>
+        <div class="social-links">
+            <a href="#">📱</a>
+            <a href="#">💼</a>
+            <a href="#">📧</a>
+        </div>
+    </footer>
+</body>
+</html>
