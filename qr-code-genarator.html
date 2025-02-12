@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Code Generator</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f2f5;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            width: 100%;
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #2196F3;
+        }
+
+        .options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        select {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        select:focus {
+            outline: none;
+            border-color: #2196F3;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .download-btn {
+            background-color: #2196F3;
+        }
+
+        .download-btn:hover {
+            background-color: #1976D2;
+        }
+
+        #qrcode {
+            text-align: center;
+            margin-top: 20px;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+        }
+
+        .error {
+            color: #f44336;
+            font-size: 14px;
+            margin-top: 5px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>QR Code Generator</h1>
+        
+        <div class="input-group">
+            <label for="text">Masukkan Teks atau URL:</label>
+            <textarea id="text" placeholder="Ketik atau paste teks di sini..."></textarea>
+            <div class="error" id="textError">Teks tidak boleh kosong</div>
+        </div>
+
+        <div class="options">
+            <div class="input-group">
+                <label for="size">Ukuran:</label>
+                <select id="size">
+                    <option value="100">100x100</option>
+                    <option value="200" selected>200x200</option>
+                    <option value="300">300x300</option>
+                    <option value="400">400x400</option>
+                </select>
+            </div>
+
+            <div class="input-group">
+                <label for="color">Warna:</label>
+                <select id="color">
+                    <option value="#000000">Hitam</option>
+                    <option value="#2196F3">Biru</option>
+                    <option value="#4CAF50">Hijau</option>
+                    <option value="#f44336">Merah</option>
+                    <option value="#9C27B0">Ungu</option>
+                </select>
+            </div>
+        </div>
+
+        <button onclick="generateQR()">Generate QR Code</button>
+        <button class="download-btn" onclick="downloadQR()" id="downloadBtn" style="display: none;">Download QR Code</button>
+
+        <div id="qrcode"></div>
+    </div>
+
+    <script>
+        let qrcode = null;
+
+        function generateQR() {
+            const text = document.getElementById('text').value;
+            const size = parseInt(document.getElementById('size').value);
+            const color = document.getElementById('color').value;
+            const textError = document.getElementById('textError');
+            const downloadBtn = document.getElementById('downloadBtn');
+
+            // Validasi input
+            if (!text.trim()) {
+                textError.style.display = 'block';
+                return;
+            }
+            textError.style.display = 'none';
+
+            // Hapus QR Code sebelumnya
+            const qrcodeDiv = document.getElementById('qrcode');
+            qrcodeDiv.innerHTML = '';
+
+            // Buat QR Code baru
+            qrcode = new QRCode(qrcodeDiv, {
+                text: text,
+                width: size,
+                height: size,
+                colorDark: color,
+                colorLight: '#ffffff',
+                correctLevel: QRCode.CorrectLevel.H
+            });
+
+            // Tampilkan tombol download
+            downloadBtn.style.display = 'block';
+        }
+
+        function downloadQR() {
+            if (!qrcode) return;
+
+            // Tunggu sampai QR Code terbuat
+            setTimeout(() => {
+                const canvas = document.querySelector('#qrcode canvas');
+
+                if (!canvas) {
+                    alert("QR Code tidak ditemukan!");
+                    return;
+                }
+
+                // Konversi canvas ke gambar PNG
+                const dataUrl = canvas.toDataURL("image/png");
+
+                // Buat link untuk download
+                const link = document.createElement('a');
+                link.href = dataUrl;
+                link.download = 'qrcode.png';
+
+                // Jalankan proses download
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            }, 500); // Tunggu 500ms agar QR Code benar-benar ter-render
+        }
+
+        // Generate QR code ketika tombol Enter ditekan dalam textarea
+        document.getElementById('text').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                generateQR();
+            }
+        });
+    </script>
+</body>
+</html>
