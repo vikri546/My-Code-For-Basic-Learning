@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Galeri Foto Responsif</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            grid-gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .gallery-item {
+            background-color: white;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+
+        .gallery-item:hover {
+            transform: scale(1.05);
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+        }
+
+        .gallery-item .caption {
+            padding: 15px;
+            text-align: center;
+            background-color: #f9f9f9;
+        }
+
+        .gallery-title {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+<body>
+    <h1 class="gallery-title">Galeri Foto Saya</h1>
+    <div class="gallery">
+        <div class="gallery-item">
+            <img src="../Image Random/Vikri_Ardiansyah_pemandangan_alam_hd_4k_72f7d1eb-2e8c-46ca-86a3-966ffc59f670 (1).jpg" alt="Foto 1">
+            <div class="caption">Pemandangan Alam</div>
+        </div>
+        <div class="gallery-item">
+            <img src="/api/placeholder/300/250?text=Foto+2" alt="Foto 2">
+            <div class="caption">Perjalanan</div>
+        </div>
+        <div class="gallery-item">
+            <img src="/api/placeholder/300/250?text=Foto+3" alt="Foto 3">
+            <div class="caption">Arsitektur</div>
+        </div>
+        <div class="gallery-item">
+            <img src="/api/placeholder/300/250?text=Foto+4" alt="Foto 4">
+            <div class="caption">Seni Jalanan</div>
+        </div>
+        <div class="gallery-item">
+            <img src="/api/placeholder/300/250?text=Foto+5" alt="Foto 5">
+            <div class="caption">Potret</div>
+        </div>
+        <div class="gallery-item">
+            <img src="/api/placeholder/300/250?text=Foto+6" alt="Foto 6">
+            <div class="caption">Kuliner</div>
+        </div>
+        <div class="gallery-item">
+            <img src="/api/placeholder/300/250?text=Foto+6" alt="Foto 6">
+            <div class="caption">Program</div>
+        </div>
+        <div class="gallery-item">
+            <img src="/api/placeholder/300/250?text=Foto+6" alt="Foto 6">
+            <div class="caption">Liburan</div>
+        </div>
+        <div class="gallery-item">
+            <img src="/api/placeholder/300/250?text=Foto+6" alt="Foto 6">
+            <div class="caption">Food Fest</div>
+        </div>
+        <div class="gallery-item">
+            <img src="/api/placeholder/300/250?text=Foto+6" alt="Foto 6">
+            <div class="caption">Wallpaper Favorit</div>
+        </div>
+        <div class="gallery-item">
+            <img src="/api/placeholder/300/250?text=Foto+6" alt="Foto 6">
+            <div class="caption">My Type</div>
+        </div>
+        <div class="gallery-item">
+            <img src="/api/placeholder/300/250?text=Foto+6" alt="Foto 6">
+            <div class="caption">Hobbies</div>
+        </div>
+    </div>
+</body>
+</html>
