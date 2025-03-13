@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TimeMaster - Time Generator & Countdown Timer</title>
+    <style>
+        /* Google Font */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        :root {
+            --primary-color: #3b82f6;
+            --primary-light: #60a5fa;
+            --primary-dark: #2563eb;
+            --secondary-color: #10b981;
+            --accent-color: #f59e0b;
+            --text-dark: #1f2937;
+            --text-light: #f9fafb;
+            --text-muted: #6b7280;
+            --bg-light: #f3f4f6;
+            --bg-dark: #111827;
+            --bg-card: #ffffff;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            --border-radius: 12px;
+            --transition: all 0.3s ease;
+        }
+
+        /* Dark Mode Variables */
+        .dark-mode {
+            --primary-color: #3b82f6;
+            --primary-light: #60a5fa;
+            --primary-dark: #2563eb;
+            --secondary-color: #10b981;
+            --accent-color: #f59e0b;
+            --text-dark: #f9fafb;
+            --text-light: #1f2937;
+            --text-muted: #9ca3af;
+            --bg-light: #1f2937;
+            --bg-dark: #111827;
+            --bg-card: #374151;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            min-height: 100vh;
+            padding: 20px;
+            transition: var(--transition);
+        }
+
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+            padding-bottom: 50px;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding: 16px 0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .dark-mode-toggle {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.4rem;
+            color: var(--text-dark);
+            transition: var(--transition);
+        }
+
+        .dark-mode-toggle:hover {
+            transform: scale(1.1);
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo i {
+            font-size: 1.8rem;
+        }
+
+        .card {
+            background-color: var(--bg-card);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            padding: 24px;
+            margin-bottom: 24px;
+            animation: fadeIn 0.5s ease-in;
+            overflow: hidden;
+            transition: var(--transition);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .card-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .current-time-card .time-display {
+            text-align: center;
+            padding: 20px 0;
+        }
+
+        .current-time {
+            font-size: 3.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 8px;
+            letter-spacing: 2px;
+        }
+
+        .current-date {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            margin-bottom: 16px;
+        }
+
+        .countdown-card .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--text-dark);
+        }
+
+        .input-group input, .input-group select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid #ddd;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            transition: var(--transition);
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+        }
+
+        .input-group input:focus, .input-group select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .preset-dates {
+            margin-bottom: 24px;
+        }
+
+        .preset-dates h3 {
+            margin-bottom: 12px;
+            font-weight: 500;
+            font-size: 1rem;
+            color: var(--text-dark);
+        }
+
+        .preset-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .preset-btn {
+            padding: 8px 16px;
+            background-color: var(--bg-light);
+            color: var(--primary-color);
+            border: 1px solid var(--primary-light);
+            border-radius: 20px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .preset-btn:hover {
+            background-color: var(--primary-light);
+            color: white;
+        }
+
+        .preset-btn.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .preset-btn-container {
+            display: flex;
+            align-items: center;
+        }
+
+        .delete-btn {
+            padding: 8px;
+            background-color: #ef4444;
+            color: white;
+            border: none;
+            border-radius: 0 20px 20px 0;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-left: -1px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .delete-btn:hover {
+            background-color: #dc2626;
+        }
+
+        .preset-btn-with-delete {
+            border-radius: 20px 0 0 20px;
+        }
+
+        .countdown-display {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .countdown-item {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: white;
+            border-radius: var(--border-radius);
+            padding: 16px 10px;
+            width: 22%;
+            box-shadow: 0 4px 10px rgba(37, 99, 235, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .countdown-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0));
+            z-index: 1;
+        }
+
+        .countdown-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .countdown-label {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            opacity: 0.9;
+            position: relative;
+            z-index: 2;
+        }
+
+        .event-info {
+            text-align: center;
+            margin-top: 24px;
+            padding: 16px;
+            background-color: var(--bg-light);
+            border-radius: var(--border-radius);
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .event-name {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 4px;
+        }
+
+        .event-date {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .note {
+            margin-top: 16px;
+            padding: 12px;
+            background-color: rgba(245, 158, 11, 0.1);
+            border-radius: var(--border-radius);
+            font-size: 0.9rem;
+            color: var(--accent-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .note i {
+            font-size: 1.2rem;
+        }
+
+        .custom-event-section {
+            margin-top: 24px;
+            padding-top: 24px;
+            border-top: 1px dashed rgba(0, 0, 0, 0.1);
+        }
+
+        .custom-event-section h3 {
+            margin-bottom: 16px;
+            font-weight: 500;
+            color: var(--text-dark);
+        }
+
+        .btn {
+            padding: 12px 20px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .btn-secondary {
+            background-color: var(--secondary-color);
+        }
+
+        .btn-secondary:hover {
+            background-color: #0da271;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 16px;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Media Queries */
+        @media (max-width: 768px) {
+            .countdown-display {
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+            
+            .countdown-item {
+                width: 48%;
+                margin-bottom: 10px;
+            }
+            
+            .current-time {
+                font-size: 2.5rem;
+            }
+
+            .btn-group {
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .card {
+                padding: 16px;
+            }
+            
+            .countdown-value {
+                font-size: 2rem;
+            }
+            
+            .preset-buttons {
+                justify-content: center;
+            }
+        }
+    </style>
+    <!-- FontAwesome for icons -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <i class="fas fa-hourglass-half"></i>
+                <span>TimeMaster</span>
+            </div>
+            <button class="dark-mode-toggle" id="dark-mode-toggle">
+                <i class="fas fa-moon"></i>
+            </button>
+        </header>
+
+        <!-- Current Time Card -->
+        <div class="card current-time-card">
+            <div class="card-header">
+                <div class="card-title">
+                    <i class="fas fa-clock"></i>
+                    <span>Waktu Saat Ini</span>
+                </div>
+            </div>
+            <div class="time-display">
+                <div class="current-time" id="current-time">00:00:00</div>
+                <div class="current-date" id="current-date">Memuat tanggal...</div>
+            </div>
+        </div>
+
+        <!-- Countdown Card -->
+        <div class="card countdown-card">
+            <div class="card-header">
+                <div class="card-title">
+                    <i class="fas fa-stopwatch"></i>
+                    <span>Hitung Mundur</span>
+                </div>
+            </div>
+            
+            <div class="preset-dates">
+                <h3>Tanggal Penting</h3>
+                <div class="preset-buttons" id="preset-buttons">
+                    <!-- Default presets will be added here by JavaScript -->
+                    <!-- User presets will be added here by JavaScript -->
+                </div>
+            </div>
+
+            <div class="countdown-display" id="countdown-display">
+                <div class="countdown-item">
+                    <div class="countdown-value" id="days">00</div>
+                    <div class="countdown-label">Hari</div>
+                </div>
+                <div class="countdown-item">
+                    <div class="countdown-value" id="hours">00</div>
+                    <div class="countdown-label">Jam</div>
+                </div>
+                <div class="countdown-item">
+                    <div class="countdown-value" id="minutes">00</div>
+                    <div class="countdown-label">Menit</div>
+                </div>
+                <div class="countdown-item">
+                    <div class="countdown-value" id="seconds">00</div>
+                    <div class="countdown-label">Detik</div>
+                </div>
+            </div>
+
+            <div class="event-info">
+                <div class="event-name" id="event-name">Lebaran Ramadan 2025</div>
+                <div class="event-date" id="event-date">1 April 2025</div>
+            </div>
+
+            <div class="note">
+                <i class="fas fa-info-circle"></i>
+                <div>Tanggal Lebaran Ramadan 2025 adalah perkiraan (1 Syawal 1446 H) dan dapat berubah berdasarkan penentuan hilal.</div>
+            </div>
+
+            <div class="custom-event-section">
+                <h3>Buat Hitung Mundur Kustom</h3>
+                <div class="input-group">
+                    <label for="custom-event-name">Nama Acara</label>
+                    <input type="text" id="custom-event-name" placeholder="Masukkan nama acara">
+                </div>
+                <div class="input-group">
+                    <label for="custom-event-date">Tanggal</label>
+                    <input type="date" id="custom-event-date">
+                </div>
+                <div class="input-group">
+                    <label for="custom-event-icon">Ikon</label>
+                    <select id="custom-event-icon">
+                        <option value="calendar">Kalender</option>
+                        <option value="gift">Hadiah</option>
+                        <option value="heart">Hati</option>
+                        <option value="cake">Kue</option>
+                        <option value="flag">Bendera</option>
+                        <option value="moon">Bulan</option>
+                        <option value="sun">Matahari</option>
+                        <option value="star">Bintang</option>
+                        <option value="music">Musik</option>
+                        <option value="glass-cheers">Pesta</option>
+                    </select>
+                </div>
+                <div class="btn-group">
+                    <button id="set-custom-event" class="btn btn-secondary">
+                        <i class="fas fa-calendar-plus"></i> Atur Countdown
+                    </button>
+                    <button id="add-to-preset" class="btn">
+                        <i class="fas fa-plus-circle"></i> Tambah ke Preset
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <!-- You can add additional footer content here -->
+            © 2025 TimeMaster | Dibuat dengan <i class="fas fa-heart" style="color: #ef4444;"></i> oleh Tim TimeMaster  
+        </footer>
+    </div>
+
+    <script>
+        // Elements
+        const currentTimeEl = document.getElementById('current-time');
+        const currentDateEl = document.getElementById('current-date');
+        const daysEl = document.getElementById('days');
+        const hoursEl = document.getElementById('hours');
+        const minutesEl = document.getElementById('minutes');
+        const secondsEl = document.getElementById('seconds');
+        const eventNameEl = document.getElementById('event-name');
+        const eventDateEl = document.getElementById('event-date');
+        const presetButtonsEl = document.getElementById('preset-buttons');
+        const customEventNameEl = document.getElementById('custom-event-name');
+        const customEventDateEl = document.getElementById('custom-event-date');
+        const customEventIconEl = document.getElementById('custom-event-icon');
+        const setCustomEventBtn = document.getElementById('set-custom-event');
+        const addToPresetBtn = document.getElementById('add-to-preset');
+        const darkModeToggle = document.getElementById('dark-mode-toggle');
+
+        // Variables
+        let targetDate = new Date('2025-04-01T00:00:00');
+        let targetName = 'Lebaran Ramadan 2025';
+        let countdownInterval;
+        let userPresets = [];
+
+        // Default presets
+        const defaultPresets = [
+            { id: "1", name: "Lebaran Ramadan 2025", date: "2025-04-01", icon: "moon" },
+            { id: "2", name: "HUT RI 2025", date: "2025-08-17", icon: "flag" },
+            { id: "3", name: "Tahun Baru 2026", date: "2026-01-01", icon: "glass-cheers" },
+            { id: "4", name: "Natal 2025", date: "2025-12-25", icon: "gift" },
+            { id: "5", name: "Idul Adha 2025", date: "2025-05-26", icon: "sun" }
+        ];
+
+        // Icon mapping
+        const iconMap = {
+            "calendar": "fa-calendar-alt",
+            "gift": "fa-gift",
+            "heart": "fa-heart",
+            "cake": "fa-birthday-cake",
+            "flag": "fa-flag",
+            "moon": "fa-moon",
+            "sun": "fa-sun",
+            "star": "fa-star",
+            "music": "fa-music",
+            "glass-cheers": "fa-glass-cheers"
+        };
+
+        // Load user settings from localStorage
+        function loadUserSettings() {
+            // Load dark mode preference
+            if(localStorage.getItem('darkMode') === 'enabled') {
+                document.body.classList.add('dark-mode');
+                darkModeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+            }
+            
+            // Load user presets if any
+            const savedPresets = localStorage.getItem('userPresets');
+            if(savedPresets) {
+                userPresets = JSON.parse(savedPresets);
+            }
+            
+            // Render all presets
+            renderPresets();
+            
+            // Set today's date to custom date input as default
+            const today = new Date();
+            const year = today.getFullYear();
+            const month = String(today.getMonth() + 1).padStart(2, '0');
+            const day = String(today.getDate()).padStart(2, '0');
+            customEventDateEl.value = `${year}-${month}-${day}`;
+        }
+
+        // Render all presets (default + user)
+        function renderPresets() {
+            // Clear existing buttons
+            presetButtonsEl.innerHTML = '';
+            
+            // Add default presets
+            defaultPresets.forEach(preset => {
+                const button = document.createElement('button');
+                button.className = 'preset-btn';
+                if (preset.name === targetName && preset.date === targetDate.toISOString().split('T')[0]) {
+                    button.classList.add('active');
+                }
+                button.dataset.date = preset.date;
+                button.dataset.name = preset.name;
+                button.innerHTML = `<i class="fas ${iconMap[preset.icon]}"></i> ${preset.name}`;
+                button.addEventListener('click', () => {
+                    setTargetEvent(preset.name, preset.date);
+                });
+                presetButtonsEl.appendChild(button);
+            });
+            
+            // Add user presets with delete buttons
+            userPresets.forEach(preset => {
+                const container = document.createElement('div');
+                container.className = 'preset-btn-container';
+                
+                const button = document.createElement('button');
+                button.className = 'preset-btn preset-btn-with-delete';
+                if (preset.name === targetName && preset.date === targetDate.toISOString().split('T')[0]) {
+                    button.classList.add('active');
+                }
+                button.dataset.date = preset.date;
+                button.dataset.name = preset.name;
+                button.innerHTML = `<i class="fas ${iconMap[preset.icon] || 'fa-bookmark'}"></i> ${preset.name}`;
+                button.addEventListener('click', () => {
+                    setTargetEvent(preset.name, preset.date);
+                });
+                
+                const deleteBtn = document.createElement('button');
+                deleteBtn.className = 'delete-btn';
+                deleteBtn.innerHTML = '<i class="fas fa-trash-alt"></i>';
+                deleteBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    deletePreset(preset.id);
+                });
+                
+                container.appendChild(button);
+                container.appendChild(deleteBtn);
+                presetButtonsEl.appendChild(container);
+            });
+        }
+
+        // Update current time
+        function updateCurrentTime() {
+            const now = new Date();
+            
+            // Format time: HH:MM:SS
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            currentTimeEl.textContent = `${hours}:${minutes}:${seconds}`;
+            
+            // Format date in Indonesian locale
+            const options = { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            };
+            currentDateEl.textContent = now.toLocaleDateString('id-ID', options);
+        }
+
+        // Update countdown
+        function updateCountdown() {
+            const now = new Date();
+            const difference = targetDate - now;
+            
+            if (difference <= 0) {
+                // Event has passed
+                daysEl.textContent = '00';
+                hoursEl.textContent = '00';
+                minutesEl.textContent = '00';
+                secondsEl.textContent = '00';
+                return;
+            }
+            
+            // Calculate time units
+            const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+            
+            // Update DOM
+            daysEl.textContent = String(days).padStart(2, '0');
+            hoursEl.textContent = String(hours).padStart(2, '0');
+            minutesEl.textContent = String(minutes).padStart(2, '0');
+            secondsEl.textContent = String(seconds).padStart(2, '0');
+        }
+
+        // Format date for display
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('id-ID', { 
+                day: 'numeric', 
+                month: 'long', 
+                year: 'numeric' 
+            });
+        }
+
+        // Set target event
+        function setTargetEvent(name, date) {
+            targetName = name;
+            targetDate = new Date(date);
+            
+            eventNameEl.textContent = name;
+            eventDateEl.textContent = formatDate(date);
+            
+            // Update active state for preset buttons
+            const presetButtons = document.querySelectorAll('.preset-btn');
+            presetButtons.forEach(btn => {
+                if (btn.dataset.date === date && btn.dataset.name === name) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+            
+            // Update countdown immediately
+            updateCountdown();
+        }
+
+        // Add new preset
+        function addNewPreset() {
+            const name = customEventNameEl.value;
+            const date = customEventDateEl.value;
+            const icon = customEventIconEl.value;
+            
+            // Validate inputs
+            if (!name || !date) {
+                alert('Mohon masukkan nama acara dan tanggal!');
+                return;
+            }
+            
+            // Create new preset
+            const newPreset = { 
+                id: Date.now().toString(), 
+                name, 
+                date, 
+                icon 
+            };
+            
+            userPresets.push(newPreset);
+            
+            // Save to localStorage
+            localStorage.setItem('userPresets', JSON.stringify(userPresets));
+            
+            // Re-render presets
+            renderPresets();
+            
+            // Reset inputs
+            customEventNameEl.value = '';
+            
+            // Set as current target
+            setTargetEvent(name, date);
+            
+            // Show confirmation
+            alert(`"${name}" berhasil ditambahkan ke preset!`);
+        }
+
+        // Delete preset
+        function deletePreset(id) {
+            // Filter out the preset with the given id
+            userPresets = userPresets.filter(preset => preset.id !== id);
+            
+            // Save updated presets to localStorage
+            localStorage.setItem('userPresets', JSON.stringify(userPresets));
+            
+            // Re-render presets
+            renderPresets();
+            
+            // If the deleted preset was the active one, set to default
+            const activePreset = document.querySelector('.preset-btn.active');
+            if (!activePreset) {
+                setTargetEvent(defaultPresets[0].name, defaultPresets[0].date);
+            }
+        }
+
+        // Toggle dark mode
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+            
+            if (document.body.classList.contains('dark-mode')) {
+                darkModeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+                localStorage.setItem('darkMode', 'enabled');
+            } else {
+                darkModeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+                localStorage.setItem('darkMode', 'disabled');
+            }
+        }
+
+        // Event Listeners
+        setCustomEventBtn.addEventListener('click', () => {
+            const name = customEventNameEl.value;
+            const date = customEventDateEl.value;
+            
+            if (!name || !date) {
+                alert('Mohon masukkan nama acara dan tanggal!');
+                return;
+            }
+            
+            setTargetEvent(name, date);
+        });
+
+        addToPresetBtn.addEventListener('click', addNewPreset);
+        darkModeToggle.addEventListener('click', toggleDarkMode);
+
+        // Initialize
+        loadUserSettings();
+        updateCurrentTime();
+        updateCountdown();
+
+        // Set intervals
+        setInterval(updateCurrentTime, 1000);
+        setInterval(updateCountdown, 1000);
+    </script>
+</body>
+</html>
